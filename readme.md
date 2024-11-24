@@ -12,4 +12,5 @@ color `#86C166`
 
 - [x] upload to github
 - [ ] write the motivation
-- [ ] find a package to get the tag of music
+- [x] find a package to get the tag of music: [`mutagen`](https://mutagen.readthedocs.io/en/latest/index.html)
+  - [ ] define a class to save the tags obtain from `mutagen`
