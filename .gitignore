@@ -12,7 +12,5 @@ __pycache__/
 
 *.log
 
-*.aux
-*.bbl
-*.out
-*.blg
+# for MacOS
+.DS_Store
