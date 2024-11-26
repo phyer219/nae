@@ -22,7 +22,7 @@ Max 30 min per day.
   - album
   - artist
   - album artist
-  - generation
+  - genre
   - data
   - album picture
 
@@ -35,4 +35,5 @@ color `#86C166`
 - [x] upload to github
 - [ ] write the motivation
 - [x] find a package to get the tag of music: [`mutagen`](https://mutagen.readthedocs.io/en/latest/index.html)
-  - [ ] define a class to save the tags obtain from `mutagen`
+  - [x] define a class to save the tags obtain from `mutagen`
+  - [ ] handle the case when tags are not complete.
