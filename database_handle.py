@@ -37,3 +37,13 @@ class NaeDatabase:
                       music_item.path))
         conn.commit()
         conn.close()
+
+    def getall(self):
+        conn = sqlite3.connect(self.path)
+        c = conn.cursor()
+        items = [{'title': row[0], 'album': row[1], 'artist': row[2]}
+                 for row in c.execute("""SELECT title, album, artist FROM
+                                           music_items ORDER BY title""")]
+        conn.commit()
+        conn.close()
+        return items
