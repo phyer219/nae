@@ -1,5 +1,5 @@
-from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI, Request, HTTPException
+from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 # from fastapi.staticfiles import StaticFiles
 from .database_handle import NaeDatabase
@@ -18,3 +18,14 @@ def index(request: Request):
     items = nae_db.getall()
     return templates.TemplateResponse("index.html", {"request": request,
                                                      "songs": items, })
+
+
+@app.get("/audio/{filename:path}")
+def get_audio(filename: str):
+    if filename.endswith(".mp3"):
+        media_type = "audio/mpeg"
+    elif filename.endswith(".flac"):
+        media_type = "audio/flac"
+    else:
+        raise HTTPException(status_code=400, detail="Unsupported file type")
+    return FileResponse(filename, media_type=media_type)

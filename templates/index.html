@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,51 +11,79 @@
             margin: 20px;
             padding: 10px;
         }
+
         h1 {
             text-align: center;
             margin-bottom: 30px;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
         }
-        th, td {
+
+        th,
+        td {
             padding: 10px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
+
         th {
             background-color: #f4f4f4;
         }
+
         tr:hover {
             background-color: #f9f9f9;
         }
+
         .duration {
             text-align: center;
         }
     </style>
 </head>
+
 <body>
     <h1>All Songs</h1>
     <table>
         <thead>
             <tr>
+                <th>Play</th>
                 <th>Title</th>
                 <th>Album</th>
                 <th>Artist</th>
+                <th>Path</th>
                 <th class="duration">Duration</th>
             </tr>
         </thead>
         <tbody>
             {% for song in songs %}
             <tr>
+                <td onclick="playAudio('{{ song.path }}')">
+                    <button onclick="playAudio()"> ▶️ </button>
+                </td>
                 <td>{{ song.title }}</td>
                 <td>{{ song.album }}</td>
                 <td>{{ song.artist }}</td>
+                <td>{{ song.path }}</td>
                 <!-- <td class="duration">{{ song.duration }}</td> -->
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    <audio id="audio-player" controls>
+        <source id="audio-source" src="" type="">
+        Your browser does not support the audio element.
+    </audio>
+    <script>
+        function playAudio(filename) {
+            const audioPlayer = document.getElementById("audio-player");
+            const audioSource = document.getElementById("audio-source");
+            audioSource.src = `/audio/${filename}`;
+            audioPlayer.load();
+            audioPlayer.play();
+        }
+    </script>
 </body>
+
 </html>
