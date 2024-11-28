@@ -39,3 +39,8 @@ color `#86C166`
   - [ ] handle the case when tags are not complete.
 - [ ] improve the database
   - [ ] add a table to save the info of database, such as `BASE_DIR`
+  - [ ] handle playlist
+- [ ] complete the WebUI
+  - [ ] add the `flac` format support
+  - [ ] make the play button better
+  - [ ] add a album page
