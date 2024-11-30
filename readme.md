@@ -2,7 +2,15 @@
 
 A simple music organizer.
 
+Organize and backup the musics in different device.
+
 Max 30 min per day.
+
+## Motivation
+
+- [`beets`](https://beets.readthedocs.io/en/stable/) is nice, but it does not use relative path, and there is some rules I can not understand.
+- I enjoy the processes of developing the package.
+- I also want to learn and practice the programming skills.
 
 ## Supported format
 
@@ -33,7 +41,7 @@ color `#86C166`
 ## TODO
 
 - [x] upload to github
-- [ ] write the motivation
+- [x] write the motivation
 - [x] find a package to get the tag of music: [`mutagen`](https://mutagen.readthedocs.io/en/latest/index.html)
 - [ ] compleate the tags handler
   - [x] define a class to save the tags obtain from `mutagen`
