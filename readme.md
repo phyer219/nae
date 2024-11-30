@@ -8,7 +8,10 @@ Max 30 min per day.
 
 ## Motivation
 
-- [`beets`](https://beets.readthedocs.io/en/stable/) is nice, but it does not use relative path, and there is some rules I can not understand.
+- [`beets`](https://beets.readthedocs.io/en/stable/) is nice, but
+  - it does not use relative path
+  - there is some rules I can not understand.
+  - I do not need the auto-tagging, I am used to manually completing the tags
 - I enjoy the processes of developing the package.
 - I also want to learn and practice the programming skills.
 
