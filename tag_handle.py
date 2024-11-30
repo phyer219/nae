@@ -4,11 +4,11 @@ import mutagen
 class MusicItem:
     def __init__(self, path):
         self.path = path
-        mfile = mutagen.File(path)
-        self.tags = mfile.tags
-        if isinstance(mfile, mutagen.mp3.MP3):
+        self.mfile = mutagen.File(path)
+        self.tags = self.mfile.tags
+        if isinstance(self.mfile, mutagen.mp3.MP3):
             self._get_tag_mp3()
-        elif isinstance(mfile, mutagen.flac.FLAC):
+        elif isinstance(self.mfile, mutagen.flac.FLAC):
             self._get_tag_flac()
 
     def _get_tag_mp3(self):
@@ -19,6 +19,7 @@ class MusicItem:
         year = self.tags['TDRC'].text[0].year
         self.date = year
         self.genre = self.tags['TCON'].text[0]
+        self.duration = round(self.mfile.info.length, 2)
 
     def _get_tag_flac(self):
         self.title = self.tags['TITLE'][0]
@@ -27,3 +28,4 @@ class MusicItem:
         self.album_artist = self.tags['ALBUMARTIST'][0]
         self.date = self.tags['DATE'][0]
         self.genre = self.tags['GENRE'][0]
+        self.duration = round(self.mfile.info.length, 2)

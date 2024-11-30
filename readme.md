@@ -56,6 +56,7 @@ color `#86C166`
   - [x] add the `flac` format support
   - [ ] make the play button better
   - [ ] add a album page
+- [ ] add logging system
 
 ## Acknowledge
 

@@ -67,7 +67,7 @@
                 <td>{{ song.album }}</td>
                 <td>{{ song.artist }}</td>
                 <td>{{ song.path }}</td>
-                <!-- <td class="duration">{{ song.duration }}</td> -->
+                <td class="duration">{{ song.duration }} seconds</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -144,15 +144,14 @@
                     }
                 }
             };
-
-            function formatTime(seconds) {
+        };
+        function formatTime(seconds) {
                 seconds = Math.round(seconds);
 
                 const minutes = Math.floor(seconds / 60);
                 const remainingSeconds = seconds % 60;
                 return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
             };
-        };
     </script>
 </body>
 

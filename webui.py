@@ -29,3 +29,12 @@ def get_audio(filename: str):
     else:
         raise HTTPException(status_code=400, detail="Unsupported file type")
     return FileResponse(filename, media_type=media_type)
+
+
+@app.get("/album/{album_id}", response_class=HTMLResponse)
+def get_album(request: Request, album_id: int):
+    nae_db = NaeDatabase(database_dir=DATABASE_DIR,
+                         database_name=DATABASE_NAME)
+    album = nae_db.db_select_tracks_from_albums(album_id)
+    return templates.TemplateResponse("album.html", {"request": request,
+                                                     "album": album, })
