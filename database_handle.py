@@ -2,19 +2,7 @@ import os
 import sqlite3
 from contextlib import contextmanager
 from .tag_handle import MusicItem
-
-
-@contextmanager
-def connect_db(db_path):
-    conn = sqlite3.connect(db_path)
-    try:
-        yield conn
-    except Exception as e:
-        print("============ datebase error =========")
-        print(e)
-        conn.rollback()
-    finally:
-        conn.close()
+from .logger import Logger
 
 
 class NaeDatabase:
@@ -50,24 +38,39 @@ class NaeDatabase:
                  date, genre, path)
                 VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """
+    logger = Logger(log_name='NaeDatabase')
 
     def __init__(self, database_dir, database_name):
         self.db_path = os.path.join(database_dir, database_name)
+        self.logger.info(f"base directory: {os.path.abspath(database_dir)}")
+        self.logger.info(f"database path: {self.db_path}")
         self._init_db()
+
+    @contextmanager
+    def connect_db(self):
+        conn = sqlite3.connect(self.db_path)
+        try:
+            yield conn
+        except Exception as e:
+            self.logger.error(e)
+            conn.rollback()
+        finally:
+            conn.close()
 
     def _init_db(self):
         if not os.path.exists(self.db_path):
+            self.logger.info(f"creating database: {self.db_path}")
             self._create_db()
 
     def _create_db(self):
-        with connect_db(self.db_path) as conn:
+        with self.connect_db() as conn:
             c = conn.cursor()
             c.execute(self.CREATE_TRACKS_TABLE)
             c.execute(self.CREATE_ALBUMS_TABLE)
             conn.commit()
 
     def db_insert_album(self, album: str):
-        with connect_db(self.db_path) as conn:
+        with self.connect_db() as conn:
             c = conn.cursor()
             c.execute(self.INSERT_ALBUM_QUERY, (album,))
             conn.commit()
@@ -78,7 +81,7 @@ class NaeDatabase:
         return result
 
     def db_select_tracks_from_albums(self, album_id: int):
-        with connect_db(self.db_path) as conn:
+        with self.connect_db() as conn:
             c = conn.cursor()
             c.execute("""
                     SELECT title FROM albums WHERE album_id=?
@@ -114,7 +117,7 @@ class NaeDatabase:
         conn.close()
 
     def getall(self):
-        with connect_db(self.db_path) as conn:
+        with self.connect_db() as conn:
             c = conn.cursor()
             items = [{'title': row[0], 'album': row[1], 'artist': row[2],
                     'path': row[3], 'duration': row[4]}
