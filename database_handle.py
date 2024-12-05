@@ -1,7 +1,7 @@
 import os
 import sqlite3
 from contextlib import contextmanager
-from .tag_handle import MusicItem
+from .tag_handle import Track
 from .logger import Logger
 
 
@@ -10,33 +10,51 @@ class NaeDatabase:
                     CREATE TABLE tracks
                     (track_id INTEGER PRIMARY KEY AUTOINCREMENT,
                     title TEXT NOT NULL,
-                    album TEXT NOT NULL,
                     album_id INTEGER,
-                    artist text,
+                    artist_id INTEGER,
                     duration FLOAT,
-                    album_artist text,
-                    date text,
-                    genre text,
-                    path text,
-                    FOREIGN KEY (album_id) REFERENCES albums (album_id))
+                    track_number INTEGER,
+                    album_artist_id INTEGER,
+                    date TEXT NOT NULL,
+                    genre TEXT NOT NULL,
+                    total_tracks INTEGER,
+                    path TEXT NOT NULL,
+                    disc_number TEXT,
+                    total_discs TEXT,
+                    FOREIGN KEY (album_id) REFERENCES albums (album_id)
+                    FOREIGN KEY (artist_id) REFERENCES artists (artist_id)
+                    FOREIGN KEY (album_artist_id) REFERENCES albums (album_id))
                     '''
     CREATE_ALBUMS_TABLE = '''
                     CREATE TABLE albums
                     (album_id INTEGER PRIMARY KEY AUTOINCREMENT,
                     title TEXT NOT NULL)
                     '''
-    INSERT_ALBUM_QUERY = """
+    CREATE_ARTISTS_TABLE = '''
+                    CREATE TABLE artists
+                    (artist_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT NOT NULL)
+                    '''
+    INSERT_ALBUM_QUERY = '''
                 INSERT INTO albums
                 (title)
-                VALUES(?)"""
-    SELECT_ALBUM_QUERY = """
-                SELECT album_id, title FROM albums
+                VALUES(?)'''
+    INSERT_ARTIST_QUERY = '''
+                INSERT INTO artists
+                (name)
+                VALUES(?)'''
+    SELECT_ALBUM_ID_QUERY = """
+                SELECT album_id FROM albums
                 WHERE title=?"""
+    SELECT_ARTIST_ID_QUERY = """
+                SELECT artist_id FROM artists
+                WHERE name=?"""
     INSERT_TRACK_QUERY = """
                 INSERT INTO tracks
-                (title, album, album_id, artist, duration, album_artist,
-                 date, genre, path)
-                VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)
+                (title, album_id, artist_id, duration, track_number,
+                total_tracks, disc_number, total_discs, album_artist_id,
+                date, genre, path)
+                VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """
     logger = Logger(log_name='NaeDatabase')
 
@@ -54,6 +72,7 @@ class NaeDatabase:
         except Exception as e:
             self.logger.error(e)
             conn.rollback()
+            raise e
         finally:
             conn.close()
 
@@ -67,6 +86,7 @@ class NaeDatabase:
             c = conn.cursor()
             c.execute(self.CREATE_TRACKS_TABLE)
             c.execute(self.CREATE_ALBUMS_TABLE)
+            c.execute(self.CREATE_ARTISTS_TABLE)
             conn.commit()
 
     def db_insert_album(self, album: str):
@@ -75,10 +95,61 @@ class NaeDatabase:
             c.execute(self.INSERT_ALBUM_QUERY, (album,))
             conn.commit()
 
-    def db_select_album(self, cursor, album: str):
-        cursor.execute(self.SELECT_ALBUM_QUERY, (album,))
+    def db_insert_artist(self, name: str):
+        with self.connect_db() as conn:
+            c = conn.cursor()
+            c.execute(self.INSERT_ARTIST_QUERY, (name,))
+            conn.commit()
+
+    def get_album_id(self, cursor, album: str):
+        cursor.execute(self.SELECT_ALBUM_ID_QUERY, (album,))
         result = cursor.fetchone()
         return result
+
+    def get_artist_id(self, cursor, name: str):
+        cursor.execute(self.SELECT_ARTIST_ID_QUERY, (name,))
+        result = cursor.fetchone()
+        return result
+
+    def db_insert_track(self, track: Track):
+        with self.connect_db() as conn:
+            c = conn.cursor()
+
+            album_id = self.get_album_id(c, track.album)
+            if album_id:
+                album_id = album_id[0]
+            else:
+                self.db_insert_album(track.album)
+                album_id = self.get_album_id(c, track.album)[0]
+
+            artist_id = self.get_artist_id(c, track.artist)
+            if artist_id:
+                artist_id = artist_id[0]
+            else:
+                self.db_insert_artist(track.artist)
+                artist_id = self.get_artist_id(c, track.artist)[0]
+
+            album_artist_id = self.get_artist_id(c, track.album_artist)
+            if album_artist_id:
+                album_artist_id = album_artist_id[0]
+            else:
+                self.db_insert_artist(track.album_artist)
+                album_artist_id = self.get_artist_id(c, track.album_artist)[0]
+
+            c.execute(self.INSERT_TRACK_QUERY,
+                      (track.title,
+                       album_id,
+                       artist_id,
+                       track.duration,
+                       track.track_number,
+                       track.total_tracks,
+                       track.disc_number,
+                       track.total_discs,
+                       album_artist_id,
+                       track.date,
+                       track.genre,
+                       track.path))
+            conn.commit()
 
     def db_select_tracks_from_albums(self, album_id: int):
         with self.connect_db() as conn:
@@ -92,29 +163,6 @@ class NaeDatabase:
                     """, (album_id,))
             album['tracks'] = c.fetchall()
         return album
-
-    def db_insert_track(self, track: MusicItem):
-        conn = sqlite3.connect(self.db_path)
-        c = conn.cursor()
-        album_id = self.db_select_album(c, track.album)
-        if album_id:
-            album_id = album_id[0]
-        else:
-            self.db_insert_album(track.album)
-            album_id = self.db_select_album(c, track.album)[0]
-
-        c.execute(self.INSERT_TRACK_QUERY,
-                     (track.title,
-                      track.album,
-                      album_id,
-                      track.artist,
-                      track.duration,
-                      track.album_artist,
-                      track.date,
-                      track.genre,
-                      track.path))
-        conn.commit()
-        conn.close()
 
     def getall(self):
         with self.connect_db() as conn:
