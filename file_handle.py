@@ -18,5 +18,5 @@ def import_media(dir):
     logger.info('Start import media')
     for i, f in enumerate(scan_media(dir)):
         logger.info(f'Find {i+1: >5} media: {f}')
-        # db.db_insert_track(Track(f))
+        db.db_insert_track(Track(f))
     logger.info(f'Finished import media!')
