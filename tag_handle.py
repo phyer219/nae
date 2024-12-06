@@ -1,13 +1,16 @@
 import mutagen
 import os
 
+from .logger import Logger
+from .default_config import LOG_PATH
+
 
 def process_number_total(num_tot: str, cut='/'):
     if not num_tot:
         return 'NULL', 'NULL'
 
     splited = num_tot.split(cut)
-    if len(splited) == 1:
+    if len(splited) == 1 or not splited[1]:
         return int(splited[0]), 'NULL'
     else:
         return int(splited[0]), int(splited[1])
@@ -15,6 +18,7 @@ def process_number_total(num_tot: str, cut='/'):
 
 class Track:
     def __init__(self, path):
+        self.logger = Logger('Track', LOG_PATH)
         self.path = path
         self.mfile = mutagen.File(path)
         self.tags = self.mfile.tags
@@ -73,3 +77,16 @@ class Track:
 
         discknum = self.tags.get('DISCNUMBER', [''])[0]
         self.disc_number, self.total_discs = process_number_total(discknum)
+
+    # def _process_ID3v2(self, tag: str):
+    #     return tag.text[0]
+    # def _process_FLAC(self, tag:str):
+    #     return tag[]
+
+    # def _get_ID3v2_and_warning(self, tag: str, not_null: False):
+    #     tag = self.tags.get(tag)
+    #     if tag:
+    #         return tag.text[0]
+    #     elif not_null:
+    #         self.logger.warning(f'{tag:s} NOT FOUND! return null')
+    #     return 'NULL'
