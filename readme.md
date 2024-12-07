@@ -6,6 +6,36 @@ Organize and backup the musics in different device.
 
 Max 30 min per day.
 
+## Basic usage
+
+Because this package us under development, the following script is only for debug testing.
+
+```python
+import os
+from time import perf_counter
+from nae.database_handle import NaeDatabase
+from nae.tag_handle import Track
+from nae.webui import app
+from nae.file_handle import import_media
+from nae.default_config import DATABASE_DIR, DATABASE_NAME
+import uvicorn
+
+# For debug, delete the database when import new media.
+# if os.path.exists(os.path.join(DATABASE_DIR, DATABASE_NAME)):
+#     print("database exists, and will be deleted")
+#     os.remove(os.path.join(DATABASE_DIR, DATABASE_NAME))
+
+
+media_path = '.'
+import_media(media_path)
+
+# run the webUI
+# uvicorn.run(app,
+#             host="127.0.0.1", port=8000, reload=False)
+# items = nae_db.getall()
+
+```
+
 ## Motivation
 
 - [`beets`](https://beets.readthedocs.io/en/stable/) is nice, but
