@@ -12,18 +12,19 @@ class NaeDatabase:
                     title TEXT NOT NULL,
                     album_id INTEGER,
                     artist_id INTEGER,
-                    duration FLOAT,
+                    duration REAL NOT NULL,
                     track_number INTEGER,
                     album_artist_id INTEGER,
                     date TEXT NOT NULL,
                     genre TEXT NOT NULL,
                     total_tracks INTEGER,
                     path TEXT NOT NULL,
-                    disc_number TEXT,
-                    total_discs TEXT,
-                    FOREIGN KEY (album_id) REFERENCES albums (album_id)
-                    FOREIGN KEY (artist_id) REFERENCES artists (artist_id)
-                    FOREIGN KEY (album_artist_id) REFERENCES albums (album_id))
+                    disc_number INTEGER,
+                    total_discs INTEGER,
+                    FOREIGN KEY (album_id) REFERENCES albums (album_id),
+                    FOREIGN KEY (artist_id) REFERENCES artists (artist_id),
+                    FOREIGN KEY (album_artist_id)
+                                REFERENCES artists (artist_id))
                     '''
     CREATE_ALBUMS_TABLE = '''
                     CREATE TABLE albums
