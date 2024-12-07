@@ -9,14 +9,14 @@ class NaeDatabase:
     CREATE_TRACKS_TABLE = '''
                     CREATE TABLE tracks
                     (track_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    title TEXT NOT NULL,
+                    title TEXT,
                     album_id INTEGER,
                     artist_id INTEGER,
-                    duration REAL NOT NULL,
+                    duration REAL,
                     track_number INTEGER,
                     album_artist_id INTEGER,
-                    date TEXT NOT NULL,
-                    genre TEXT NOT NULL,
+                    date TEXT,
+                    genre TEXT,
                     total_tracks INTEGER,
                     path TEXT NOT NULL,
                     disc_number INTEGER,

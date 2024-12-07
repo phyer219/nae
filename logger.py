@@ -8,17 +8,18 @@ class Logger:
         self.logger = logging.getLogger(log_name)
         self.logger.setLevel(log_level)
 
-        formatter = logging.Formatter('''%(asctime)s - %(levelname)s from %(name)s: %(message)s''')
-        fh = logging.FileHandler(log_file)
-        fh.setLevel(log_level)
-        fh.setFormatter(formatter)
-        self.logger.addHandler(fh)
+        if not self.logger.handlers:
+            formatter = logging.Formatter('''%(asctime)s - %(levelname)s from %(name)s: %(message)s''')
+            fh = logging.FileHandler(log_file)
+            fh.setLevel(log_level)
+            fh.setFormatter(formatter)
+            self.logger.addHandler(fh)
 
-        if stdout:
-            ch = logging.StreamHandler()
-            ch.setLevel(log_level)
-            ch.setFormatter(formatter)
-            self.logger.addHandler(ch)
+            if stdout:
+                ch = logging.StreamHandler()
+                ch.setLevel(log_level)
+                ch.setFormatter(formatter)
+                self.logger.addHandler(ch)
 
     def info(self, message):
         self.logger.info(message)

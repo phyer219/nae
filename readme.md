@@ -48,7 +48,7 @@ color `#86C166`
 - [x] find a package to get the tag of music: [`mutagen`](https://mutagen.readthedocs.io/en/latest/index.html)
 - [ ] complete the tags handler
   - [x] define a class to save the tags obtain from `mutagen`
-  - [ ] handle the case when tags are not complete.
+  - [x] handle the case when tags are not complete.
 - [ ] improve the database
   - [ ] add a table to save the info of database, such as `BASE_DIR`
   - [ ] handle playlist

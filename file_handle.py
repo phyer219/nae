@@ -17,6 +17,9 @@ def import_media(dir):
     db = NaeDatabase(database_dir=DATABASE_DIR, database_name=DATABASE_NAME)
     logger.info('Start import media')
     for i, f in enumerate(scan_media(dir)):
+        if f.startswith('._'):
+            logger.warning(f'neglect file: {f:s}')
+            continue
         logger.info(f'Find {i+1: >5} media: {f}')
         db.db_insert_track(Track(f))
-    logger.info(f'Finished import media!')
+    logger.info('Finished import media!')
