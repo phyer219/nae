@@ -41,23 +41,33 @@ Max 30 min per day.
 
 color `#86C166`
 
-## TODO
+## develop logs and TODOs
 
 - [x] upload to github
 - [x] write the motivation
 - [x] find a package to get the tag of music: [`mutagen`](https://mutagen.readthedocs.io/en/latest/index.html)
-- [ ] complete the tags handler
+- [x] complete the tags handler
   - [x] define a class to save the tags obtain from `mutagen`
   - [x] handle the case when tags are not complete.
-- [ ] improve the database
+- [ ] complete the database
   - [ ] add a table to save the info of database, such as `BASE_DIR`
   - [ ] handle playlist
 - [ ] complete the WebUI
   - [x] add the `flac` format support
   - [ ] make the play button better
   - [ ] add a album page
-- [x] add logging system
-- [ ] color the log message
+- [ ] complete the logging system
+  - [x] add logging system
+  - [ ] color the log message
+- [ ] complete the file handler
+  - [ ] move files when import media
+  - [ ] check the file which are not `flac` or `mp3`, log these files
+  - [ ] make incremental backups when importing media
+- [ ] complete the `default_config`
+  - [x] add the `default_config`
+  - [ ] use user's config to overwrite the default config
+- [ ] write the documentation
+- [ ] publish to pypi
 
 ## Acknowledge
 
