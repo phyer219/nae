@@ -35,7 +35,7 @@ class FileHandle:
         return os.path.join(self.config.MEDIA_LIBRARY_PATH,
                             track.album_artist.replace('/', '_'),
                             track.album.replace('/', '_'),
-                            f"{track.track_number}. {track.title.replace(r'/', '_')}.{track.format}")
+                            f"{track.disc_number}-{track.track_number}. {track.title.replace(r'/', '_')}.{track.format}")
 
     def transfer_file(self, original_path: str, new_path: str):
         make_dir_exist(dest=new_path)
