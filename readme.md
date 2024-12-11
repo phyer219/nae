@@ -94,7 +94,7 @@ color `#86C166`
   - [x] move files when import media
   - [ ] check the file which are not `flac` or `mp3`, log these files
   - [ ] make incremental backups when importing media
-  - [ ] handle the case for repeated media
+  - [x] handle the case for repeated media
 - [ ] complete the `default_config`
   - [x] add the `default_config`
   - [ ] use user's config to overwrite the default config

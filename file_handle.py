@@ -54,6 +54,10 @@ def import_media(dir: str, handle_files: bool, link: bool,
         if handle_files:
             new_path = gen_new_path(media_library_path=media_library_path,
                                     track=track)
+            if os.path.exists(new_path):
+                new_path = os.path.splitext(new_path)[0]
+                new_path += '_copy' + f'.{track.format}'
+                logger.warning(f'duplicate file: {new_path}')
             move_files(original_path=track.path, new_path=new_path,
                        keep_original_file=keep_original_files, link=link,
                        logger=logger)
