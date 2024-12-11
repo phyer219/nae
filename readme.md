@@ -92,12 +92,13 @@ color `#86C166`
   - [ ] color the log message
 - [ ] complete the file handler
   - [x] move files when import media
-  - [ ] check the file which are not `flac` or `mp3`, log these files
+  - [x] check the file which are not `flac` or `mp3`, log these files
   - [ ] make incremental backups when importing media
   - [x] handle the case for repeated media
 - [ ] complete the `default_config`
   - [x] add the `default_config`
-  - [ ] use user's config to overwrite the default config
+  - [x] use user's config to overwrite the default config
+  - [ ] use `dataclass` and `pydantic`
 - [ ] write the documentation
 - [ ] publish to pypi
 

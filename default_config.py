@@ -1,10 +1,15 @@
+class NaeConfig:
 
-DATABASE_DIR = '.'
-DATABASE_NAME = 'nae_library.db'
+    def __init__(self, **configs):
+        self.DATABASE_DIR = '.'
+        self.DATABASE_NAME = 'nae_library.db'
 
-MEDIA_LIBRARY_PATH = './nae_library'
-KEEP_ORIGINAL_FILE = True
+        self.MEDIA_LIBRARY_PATH = './nae_library'
+        self.KEEP_ORIGINAL_FILE = True
 
-WEBUI_TEMPLATE_DIR = "nae/templates"
+        self.WEBUI_TEMPLATE_DIR = "nae/templates"
 
-LOG_PATH = "nae.log"
+        self.LOG_PATH = "nae.log"
+
+        for key, value in configs.items():
+            setattr(self, key, value)

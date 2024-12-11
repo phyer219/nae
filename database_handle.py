@@ -3,6 +3,7 @@ import sqlite3
 from contextlib import contextmanager
 from .tag_handle import Track
 from .logger import Logger
+from .default_config import NaeConfig
 
 
 class NaeDatabase:
@@ -57,11 +58,11 @@ class NaeDatabase:
                 date, genre, path)
                 VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """
-    logger = Logger(log_name='NaeDatabase')
 
-    def __init__(self, database_dir, database_name):
-        self.db_path = os.path.join(database_dir, database_name)
-        self.logger.info(f"base directory: {os.path.abspath(database_dir)}")
+    def __init__(self, config: NaeConfig):
+        self.logger = Logger(log_name='NaeDatabase', log_file=config.LOG_PATH)
+        self.db_path = os.path.join(config.DATABASE_DIR, config.DATABASE_NAME)
+        self.logger.info(f"base directory: {os.path.abspath(config.DATABASE_DIR)}")
         self.logger.info(f"database path: {self.db_path}")
         self._init_db()
 

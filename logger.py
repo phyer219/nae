@@ -1,9 +1,8 @@
 import logging
-from .default_config import LOG_PATH
 
 
 class Logger:
-    def __init__(self, log_name, log_file=LOG_PATH, log_level=logging.INFO,
+    def __init__(self, log_name, log_file, log_level=logging.INFO,
                  stdout=True):
         self.logger = logging.getLogger(log_name)
         self.logger.setLevel(log_level)

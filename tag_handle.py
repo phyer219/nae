@@ -2,7 +2,7 @@ import mutagen
 import os
 
 from .logger import Logger
-from .default_config import LOG_PATH
+from .default_config import NaeConfig
 
 
 def process_number_total(num_tot: str, cut='/'):
@@ -17,8 +17,8 @@ def process_number_total(num_tot: str, cut='/'):
 
 
 class Track:
-    def __init__(self, path):
-        self.logger = Logger('Track', LOG_PATH)
+    def __init__(self, path, config: NaeConfig):
+        self.logger = Logger('Track', config.LOG_PATH)
         self.path = path
         self.mfile = mutagen.File(path)
         self.tags = self.mfile.tags

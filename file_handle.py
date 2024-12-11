@@ -2,8 +2,7 @@ import os
 import shutil
 from .tag_handle import Track
 from .database_handle import NaeDatabase
-from .default_config import (DATABASE_DIR, DATABASE_NAME, LOG_PATH,
-                             KEEP_ORIGINAL_FILE, MEDIA_LIBRARY_PATH)
+from .default_config import NaeConfig
 from .logger import Logger
 
 
@@ -13,54 +12,64 @@ def make_dir_exist(dest):
         os.makedirs(dest_dir)
 
 
-def scan_media(dir: str):
-    for dirpath, dirnames, filenames in os.walk(dir):
-        for f in filenames:
-            if f.endswith('.mp3') or f.endswith('.flac'):
-                yield os.path.join(dirpath, f)
+class FileHandle:
+    supported_media_type = ('mp3', 'flac')
 
+    def __init__(self, media_path_to_import,
+                 keep_original_file: bool, link: bool,
+                 handle_files: bool,
+                 database: NaeDatabase,
+                 config: NaeConfig):
+        self.config = config
+        self.logger = Logger('File Handle', log_file=config.LOG_PATH)
+        self.media_path_to_import = media_path_to_import
+        self.keep_original_file = keep_original_file
+        self.link = link
+        self.handle_files = handle_files
+        self.db = database
 
-def gen_new_path(media_library_path: str, track: Track) -> str:
-    return os.path.join(media_library_path,
-                        track.album_artist.replace('/', '_'),
-                        track.album.replace('/', '_'),
-                        f"{track.track_number}. {track.title.replace(r'/', '_')}.{track.format}")
+    def scan_media(self):
+        for dirpath, dirnames, filenames in os.walk(self.media_path_to_import):
+            for f in filenames:
+                if f.endswith(self.supported_media_type):
+                    yield os.path.join(dirpath, f)
+                else:
+                    self.logger.warning(f'unsupported file type: {f}')
 
+    def gen_new_path(self, track: Track) -> str:
+        return os.path.join(self.config.MEDIA_LIBRARY_PATH,
+                            track.album_artist.replace('/', '_'),
+                            track.album.replace('/', '_'),
+                            f"{track.track_number}. {track.title.replace(r'/', '_')}.{track.format}")
 
-def move_files(original_path: str, new_path: str,
-               keep_original_file: bool, link: bool, logger: Logger):
-    make_dir_exist(dest=new_path)
-    if keep_original_file:
-        if link:
-            os.link(original_path, new_path)
-            logger.info(f'create link for file: {original_path} >> {new_path}')
+    def transfer_file(self, original_path: str, new_path: str):
+        make_dir_exist(dest=new_path)
+        if self.keep_original_file:
+            if self.link:
+                os.link(original_path, new_path)
+                self.logger.info(f'create link for file: {original_path} >> {new_path}')
+            else:
+                shutil.copy(original_path, new_path)
+                self.logger.info(f'copy file: {original_path} >> {new_path}')
         else:
-            shutil.copy(original_path, new_path)
-            logger.info(f'copy file: {original_path} >> {new_path}')
-    else:
-        shutil.move(original_path, new_path)
-        logger.info(f'move file: {original_path} >> {new_path}')
+            shutil.move(original_path, new_path)
+            self.logger.info(f'move file: {original_path} >> {new_path}')
 
-
-def import_media(dir: str, handle_files: bool, link: bool,
-                 keep_original_files=KEEP_ORIGINAL_FILE,
-                 media_library_path=MEDIA_LIBRARY_PATH):
-    logger = Logger('import media', log_file=LOG_PATH)
-    db = NaeDatabase(database_dir=DATABASE_DIR, database_name=DATABASE_NAME)
-    logger.info('Start import media')
-    for i, f in enumerate(scan_media(dir)):
-        logger.info(f'Find {i+1: >5} media: {f}')
-        track = Track(f)
-        if handle_files:
-            new_path = gen_new_path(media_library_path=media_library_path,
-                                    track=track)
+    def process_track_file(self, track):
+        if self.handle_files:
+            new_path = self.gen_new_path(track=track)
             if os.path.exists(new_path):
                 new_path = os.path.splitext(new_path)[0]
                 new_path += '_copy' + f'.{track.format}'
-                logger.warning(f'duplicate file: {new_path}')
-            move_files(original_path=track.path, new_path=new_path,
-                       keep_original_file=keep_original_files, link=link,
-                       logger=logger)
+                self.logger.warning(f'duplicate file: {new_path}')
+            self.transfer_file(original_path=track.path, new_path=new_path)
             track.path = new_path
-        db.db_insert_track(track)
-    logger.info('Finished import media!')
+
+    def import_media(self):
+        self.logger.info('Start import media')
+        for i, f in enumerate(self.scan_media()):
+            self.logger.info(f'Find {i+1: >5} media: {f}')
+            track = Track(f, config=self.config)
+            self.process_track_file(track)
+            self.db.db_insert_track(track)
+        self.logger.info('Finished import media!')

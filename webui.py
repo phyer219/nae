@@ -3,7 +3,11 @@ from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.templating import Jinja2Templates
 # from fastapi.staticfiles import StaticFiles
 from .database_handle import NaeDatabase
-from .default_config import DATABASE_DIR, DATABASE_NAME, WEBUI_TEMPLATE_DIR
+from .default_config import NaeConfig
+config = NaeConfig()
+DATABASE_DIR = config.DATABASE_DIR
+DATABASE_NAME = config.DATABASE_NAME
+WEBUI_TEMPLATE_DIR = config.WEBUI_TEMPLATE_DIR
 
 app = FastAPI()
 templates = Jinja2Templates(directory=WEBUI_TEMPLATE_DIR)
