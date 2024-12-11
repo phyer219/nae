@@ -4,12 +4,7 @@ from .tag_handle import Track
 from .database_handle import NaeDatabase
 from .default_config import NaeConfig
 from .logger import Logger
-
-
-def make_dir_exist(dest):
-    dest_dir = os.path.dirname(dest)
-    if not os.path.exists(dest_dir):
-        os.makedirs(dest_dir)
+from .util import make_dir_exist
 
 
 class FileHandle:
@@ -65,11 +60,12 @@ class FileHandle:
             self.transfer_file(original_path=track.path, new_path=new_path)
             track.path = new_path
 
-    def import_media(self):
+    def import_media(self, test=True):
         self.logger.info('Start import media')
         for i, f in enumerate(self.scan_media()):
             self.logger.info(f'Find {i+1: >5} media: {f}')
             track = Track(f, config=self.config)
-            self.process_track_file(track)
-            self.db.db_insert_track(track)
+            if not test:
+                self.process_track_file(track)
+                self.db.db_insert_track(track)
         self.logger.info('Finished import media!')

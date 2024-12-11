@@ -1,4 +1,5 @@
 import logging
+from .util import make_dir_exist
 
 
 class Logger:
@@ -9,6 +10,7 @@ class Logger:
 
         if not self.logger.handlers:
             formatter = logging.Formatter('''%(asctime)s - %(levelname)s from %(name)s: %(message)s''')
+            make_dir_exist(log_file)
             fh = logging.FileHandler(log_file)
             fh.setLevel(log_level)
             fh.setFormatter(formatter)
