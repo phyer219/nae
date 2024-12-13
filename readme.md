@@ -107,3 +107,4 @@ color `#86C166`
 - [`mutagen`](https://mutagen.readthedocs.io/en/latest/index.html)
 - [`FastAPI`](https://fastapi.tiangolo.com/)
 - [`HOWLER.JS`](https://howlerjs.com/)
+- [`SQLAlchemy`](https://www.sqlalchemy.org/)

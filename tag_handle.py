@@ -16,7 +16,7 @@ def process_number_total(num_tot: str, cut='/'):
         return int(splited[0]), int(splited[1])
 
 
-class Track:
+class TrackFile:
     def __init__(self, path, config: NaeConfig):
         self.logger = Logger('Track', config.LOG_PATH)
         self.path = path
