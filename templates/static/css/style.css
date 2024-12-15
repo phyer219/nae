@@ -3,17 +3,21 @@
     --background-color: #F6F9F2;
     --text-color: #333333;
     --secondary-color: #5A9E4B;
-    --accent-color: #E07A5F;
-    --border-color: #C8D5B9;
+    --accent-color: #0b611b;
+    --border-color: #9edb58;
+    --background1-color:#62b050d3;
+    --background2-color:#4f8f41d3;
 }
 
 .dark-mode {
-    --primary-color: #333333;
-    --background-color: #1E1E1E;
-    --text-color: #F6F9F2;
-    --secondary-color: #4a4a4a;
-    --accent-color: #E07A5F;
-    --border-color: #444444;
+    --primary-color: #000000;        /* 主色（纯黑） */
+    --background-color: #121212;    /* 背景主色（深黑灰） */
+    --text-color: #E0E0E0;          /* 文本颜色（浅灰） */
+    --secondary-color: #1F1F1F;     /* 次要色（较浅的黑灰） */
+    --accent-color: #BB86FC;        /* 强调色（紫罗兰） */
+    --border-color: #333333;        /* 边框色（深灰） */
+    --background1-color: #242424;   /* 过渡背景色1（深灰） */
+    --background2-color: #181818;   /* 过渡背景色2（更深的黑灰） */
 }
 
 * {
@@ -172,8 +176,17 @@ td {
     vertical-align: top;
     padding: 8px;
 }
+.track-list thead {
+    background-color: var(--secondary-color);
+}
+.track-list tbody tr:nth-child(even) {
+    background-color: var(--background1-color);
+}
+.track-list tbody tr:nth-child(odd) {
+    background-color: var(--background2-color);
+}
 
-tr:hover {
+.track-list tbody tr:hover {
     background-color: var(--border-color);
 }
 
@@ -240,7 +253,7 @@ footer {
 #progress::-moz-range-thumb {
     width: 16px;
     height: 16px;
-    background: #E07A5F;
+    background: var(--accent-color);
     border-radius: 50%;
     cursor: pointer;
     box-shadow: 0px 0px 10px var(--text-color);
