@@ -1,10 +1,11 @@
 let currentSound = null;
 
-function playAudio(filename) {
+function playAudio(filename, title) {
+    console.log('================', filename)
     if (currentSound) {
         currentSound.stop();
     }
-    document.getElementById('play-pause').textContent = "loading...";
+    document.getElementById('track-info').textContent = "loading...";
     currentSound = new Howl({
         src: [`/audio/${filename}`],
         autoplay: false,
@@ -12,18 +13,24 @@ function playAudio(filename) {
             currentSound.play();
             document.getElementById('duration').textContent = formatTime(currentSound.duration());
             document.getElementById('volume').value = currentSound.volume();
+            document.getElementById('track-info').textContent = title;
         },
         onplay: function() {
             console.log("onplay");
-            document.getElementById('play-pause').classList.toggle('fa-play');
+            console.log(`/audio/${filename}`);
+            document.getElementById('play-pause').classList.replace(
+                'fa-play', 'fa-pause');
             requestAnimationFrame(updateProgress);
         },
         onpause: function() {
             console.log("onpause");
-            document.getElementById('play-pause').classList.toggle('fa-pause');
+            console.log(`/audio/${filename}`);
+            document.getElementById('play-pause').classList.replace(
+                'fa-pause', 'fa-play');
         },
         onend: function() {
-            document.getElementById('play-pause').classList.toggle('fa-pause');
+            document.getElementById('play-pause').classList.replace(
+                'fa-pause', 'fa-play');
             document.getElementById('progress').value = 0;
             document.getElementById('current-time').textContent = "00:00";
         },
@@ -32,14 +39,27 @@ function playAudio(filename) {
         }
     });
 
-    document.getElementById('play-pause').addEventListener('click',
+
+    function removeAllEventListeners(element) {
+        const newElement = element.cloneNode(true);
+        element.replaceWith(newElement);
+        return newElement;
+    }
+    const playPauseButtonOld = document.getElementById('play-pause');
+    const playPauseButton = removeAllEventListeners(playPauseButtonOld);
+
+    playPauseButton.addEventListener('click',
         function () {
             if (currentSound.playing()) {
+                console.log("playing........");
                 currentSound.pause();
             } else {
+                console.log("pausing........");
                 currentSound.play();
             }
-        });
+        }
+    );
+
     document.getElementById('volume').oninput = function() {
         if (currentSound) {
             currentSound.volume(parseFloat(this.value));

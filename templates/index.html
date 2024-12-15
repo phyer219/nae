@@ -28,8 +28,8 @@
                 <!-- {% for track in tracks %} -->
                 <tr>
                     <td>
-                        <button onclick="playAudio('{{ track.path }}')">
-                            <i class="fas fa-play"></i>
+                        <button aria-label="Play">
+                            <i onclick="playAudio('{{ track.path }}', '{{ track.title }}')" class="fas fa-play"></i>
                         </button>
                     </td>
                     <td>{{ track.title }}</td>
@@ -54,14 +54,13 @@
     </div>
     <div class="center">
         <div class="controls">
-            <button><i class="fas fa-backward"></i></button>
-            <button id="play-pause"><i class="fas fa-play"></i></button>
-            <button><i class="fas fa-forward"></i></button>
+            <button aria-label="Previous"><i class="fas fa-backward"></i></button>
+            <button aria-label="Play/Pause"><i id="play-pause" class="fas fa-play"></i></button>
+            <button aria-label="Next"><i class="fas fa-forward"></i></button>
         </div>
         <input aria-label="Volume" type="range" id="volume" min="0" max="1" step="0.01" value="1">
-        <div>
-            <span>Current Track</span>
-            <span>Artist Name</span>
+        <div id="track-info">
+            current playing
         </div>
     </div>
     <div class="right">
