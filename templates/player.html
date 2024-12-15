@@ -1,0 +1,24 @@
+<footer class="player-bar">
+    <div class="left">
+        <img class="album-art-in-player" src="https://via.placeholder.com/60" alt="Album Art">
+    </div>
+    <div class="center">
+        <div class="controls">
+            <button aria-label="Previous"><i class="fas fa-backward"></i></button>
+            <button aria-label="Play/Pause"><i id="play-pause" class="fas fa-play"></i></button>
+            <button aria-label="Next"><i class="fas fa-forward"></i></button>
+        </div>
+        <input aria-label="Volume" type="range" id="volume" min="0" max="1" step="0.01" value="1">
+        <div id="track-info">
+            current playing
+        </div>
+    </div>
+    <div class="right">
+        <input aria-label="Progress" type="range" id="progress" min="0" max="100" step="1" value="0">
+        <div class="duration">
+            <span id="current-time">00:00</span> /
+            <span id="duration">00:00</span>
+        </div>
+    </div>
+</footer>
+<script src="/static/js/player.js"></script>
