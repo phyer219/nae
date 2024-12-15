@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Music Website</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.js"></script>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<header>
+    <h1>nae music </h1>
+    <button id="toggle-theme"><i class="fas fa-sun"></i></button>
+</header>
+<nav aria-label="Main Navigation">
+    <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+    </ul>
+</nav>
+
+{% block content %}
+
+<!-- Hero Section -->
+{% endblock %}
+
+<!-- Footer -->
+{% block footer %}
+{% endblock %}
+
+<script>
+    // document.querySelector('#toggle-theme').addEventListener(
+    //     'click', () => {document.body.classList.toggle('dark-mode');}
+    // );
+    document.querySelector('#toggle-theme').addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        const themeIcon = document.querySelector('#toggle-theme i');
+        themeIcon.classList.toggle('fa-sun');
+        themeIcon.classList.toggle('fa-moon');
+    });
+</script>
+</body>
+</html>

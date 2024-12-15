@@ -1,0 +1,243 @@
+:root {
+    --primary-color: #86C166;
+    --background-color: #F6F9F2;
+    --text-color: #333333;
+    --secondary-color: #5A9E4B;
+    --accent-color: #E07A5F;
+    --border-color: #C8D5B9;
+}
+
+.dark-mode {
+    --primary-color: #333333;
+    --background-color: #1E1E1E;
+    --text-color: #F6F9F2;
+    --secondary-color: #4a4a4a;
+    --accent-color: #E07A5F;
+    --border-color: #444444;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+}
+
+body {
+    display: flex;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    flex-direction: column;
+    font-size: 1rem;
+}
+
+header {
+    background-color: var(--primary-color);
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+header button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: var(--secondary-color);
+}
+
+.player-bar .center button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: var(--text-color);
+}
+
+
+nav {
+    background-color: var(--secondary-color);
+    padding: 15px;
+
+    display: flex;
+    justify-content: left;
+
+    box-shadow: 0px 0px 5px var(--border-color);
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+@media (max-width: 600px) {
+    nav ul {
+        display: none;
+    }
+
+    nav.active ul {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+nav ul li a {
+    text-decoration: none;
+    font-weight: bold;
+    color: var(--text-color);
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: var(--accent-color);
+    border-bottom: 2px solid var(--accent-color);
+}
+
+main {
+    flex: 1;
+    text-align: center;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.sidebar {
+    background-color: var(--secondary-color);
+    box-shadow: 0px 0px 5px var(--text-color);
+    padding: 10px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 180px;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar ul li {
+    margin-bottom: 10px;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: var(--text-color);
+    transition: color 0.3s;
+}
+
+.sidebar ul li a:hover {
+    color: var(--accent-color);
+}
+
+.track-list-container {
+    flex: 1;
+    overflow-y: scroll;
+    background-color: var(--primary-color);
+    scrollbar-width: thin;
+    /* 调整滚动条宽度 */
+    scrollbar-color: var(--accent-color) var(--border-color);
+    /* 设置滑块和轨道颜色 */
+}
+
+.track-list {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.track-list button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: var(--text-color);
+}
+
+.track-list th,
+td {
+    text-align: left;
+    vertical-align: top;
+    padding: 8px;
+}
+
+tr:hover {
+    background-color: var(--border-color);
+}
+
+
+footer {
+    background-color: var(--secondary-color);
+    text-align: center;
+    padding: 10px;
+
+    box-shadow: 0px 0px 5px var(--border-color);
+}
+
+.player-bar {
+    display: flex;
+    flex-direction: row;
+}
+
+.player-bar .left {
+    display: flex;
+    flex-direction: column;
+}
+
+.player-bar .album-art-in-player {
+    width: 80px;
+    height: 80px;
+}
+
+.player-bar .center {
+    display: flex;
+    flex-direction: column;
+}
+
+.player-bar .right {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+}
+
+.player-bar .right .duration {
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#volume,
+#progress {
+    flex: 1;
+    padding: 10px;
+    background: none;
+    /* 滑块条的背景色 */
+}
+
+/* Firefox 滑块条样式 */
+#volume::-moz-range-track,
+#progress::-moz-range-track {
+    background: var(--accent-color);
+    border-radius: 5px;
+    height: 8px;
+}
+
+/* Firefox 滑块按钮样式 */
+#volume::-moz-range-thumb,
+#progress::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #E07A5F;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0px 0px 10px rgb(0, 0, 0);
+}

@@ -1,158 +1,76 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Songs</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 10px;
-        }
+{% block content %}
 
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th,
-        td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #f4f4f4;
-        }
-
-        tr:hover {
-            background-color: #f9f9f9;
-        }
-
-        .duration {
-            text-align: center;
-        }
-    </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.4/howler.js"></script>
-</head>
-
-<body>
-    <h1>All Songs</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Play</th>
-                <th>Title</th>
-                <th>Album</th>
-                <th>Artist</th>
-                <th>Path</th>
-                <th class="duration">Duration</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for song in songs %}
-            <tr>
-                <td onclick="playAudio('{{ song.path }}')">
-                    <button> ▶️ </button>
-                </td>
-                <td>{{ song.title }}</td>
-                <td>{{ song.album.title }}</td>
-                <td>{{ song.artist.name }}</td>
-                <td>{{ song.path }}</td>
-                <td class="duration">{{ song.duration }} seconds</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <div id="audio-player">
-        <button id="play-pause">播放</button>
-        <input type="range" id="volume" min="0" max="1" step="0.01" value="1">
-        <input type="range" id="progress" min="0" max="100" step="1" value="0">
-        <span id="current-time">00:00</span> / <span id="duration">00:00</span>
+<main>
+    <aside class="sidebar">
+        <h2>Library</h2>
+        <ul>
+            <li> </li>
+            <li><a href="#">All Tracks</a></li>
+            <li><a href="#">Albums</a></li>
+            <li><a href="#">Favorites</a></li>
+            <li><a href="#">Artists</a></li>
+        </ul>
+    </aside>
+    <div class="track-list-container">
+        <table class="track-list">
+            <thead>
+                <tr>
+                    <th> </th>
+                    <th>Title</th>
+                    <th>Artist</th>
+                    <th>Album</th>
+                    <th>Duration</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- {% for track in tracks %} -->
+                <tr>
+                    <td>
+                        <button onclick="playAudio('{{ track.path }}')">
+                            <i class="fas fa-play"></i>
+                        </button>
+                    </td>
+                    <td>{{ track.title }}</td>
+                    <td>{{ track.artist.name }}</td>
+                    <td>{{ track.album.title }}</td>
+                    <td>{{ track.duration }}</td>
+                </tr>
+                <!-- {% endfor %} -->
+            </tbody>
+        </table>
     </div>
 
+</main>
 
-    <script>
-        let currentSound = null;
+{% endblock %}
 
-        function playAudio(filename) {
-            if (currentSound) {
-                currentSound.stop();
-            }
-            document.getElementById('play-pause').textContent = "loading...";
-            currentSound = new Howl({
-                src: [`/audio/${filename}`],
-                autoplay: false,
-                onload: function() {
-                    currentSound.play();
-                    document.getElementById('duration').textContent = formatTime(currentSound.duration());
-                    document.getElementById('volume').value = currentSound.volume();
-                },
-                onplay: function() {
-                    console.log("onplay");
-                    document.getElementById('play-pause').textContent = "⏸";
-                    requestAnimationFrame(updateProgress);
-                },
-                onpause: function() {
-                    console.log("onpause");
-                    document.getElementById('play-pause').textContent = "▶️";
-                },
-                onend: function() {
-                    document.getElementById('play-pause').textContent = "▶️";
-                    document.getElementById('progress').value = 0;
-                    document.getElementById('current-time').textContent = "00:00";
-                },
-                onseek: function() {
-                    requestAnimationFrame(updateProgress);
-                }
-            });
-
-            document.getElementById('play-pause').addEventListener('click',
-                function () {
-                    if (currentSound.playing()) {
-                        currentSound.pause();
-                    } else {
-                        currentSound.play();
-                    }
-                });
-            document.getElementById('volume').oninput = function() {
-                if (currentSound) {
-                    currentSound.volume(parseFloat(this.value));
-                }
-            };
-            document.getElementById('progress').oninput = function() {
-                if (currentSound) {
-                    currentSound.seek(parseFloat(this.value) / 100 * currentSound.duration());
-                }
-            };
-
-            function updateProgress() {
-                if (currentSound) {
-                    document.getElementById('progress').value = currentSound.seek() / currentSound.duration() * 100;
-                    document.getElementById('current-time').textContent = formatTime(currentSound.seek());
-                    if (currentSound.playing()) {
-                        requestAnimationFrame(updateProgress);
-                    }
-                }
-            };
-        };
-        function formatTime(seconds) {
-                seconds = Math.round(seconds);
-
-                const minutes = Math.floor(seconds / 60);
-                const remainingSeconds = seconds % 60;
-                return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-            };
-    </script>
-</body>
-
-</html>
+{% block footer %}
+{{ super() }}
+<footer class="player-bar">
+    <div class="left">
+        <img class="album-art-in-player" src="https://via.placeholder.com/60" alt="Album Art">
+    </div>
+    <div class="center">
+        <div class="controls">
+            <button><i class="fas fa-backward"></i></button>
+            <button id="play-pause"><i class="fas fa-play"></i></button>
+            <button><i class="fas fa-forward"></i></button>
+        </div>
+        <input aria-label="Volume" type="range" id="volume" min="0" max="1" step="0.01" value="1">
+        <div>
+            <span>Current Track</span>
+            <span>Artist Name</span>
+        </div>
+    </div>
+    <div class="right">
+        <input aria-label="Progress" type="range" id="progress" min="0" max="100" step="1" value="0">
+        <div class="duration">
+            <span id="current-time">00:00</span> /
+            <span id="duration">00:00</span>
+        </div>
+    </div>
+</footer>
+<script src="/static/js/player.js"></script>
+{% endblock %}
