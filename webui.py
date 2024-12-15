@@ -1,10 +1,12 @@
 import os
+from io import BytesIO
 from fastapi import FastAPI, Request, HTTPException
-from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.responses import HTMLResponse, FileResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from .database_handle import NaeDatabase
 from .default_config import NaeConfig
+from .tag_handle import TrackFile
 
 
 class WebUI:
@@ -23,6 +25,7 @@ class WebUI:
     def register_routes(self):
         self.app.get("/", response_class=HTMLResponse)(self.index)
         self.app.get("/audio/{filename:path}")(self.get_audio)
+        self.app.get("/cover/{filename:path}")(self.get_cover)
         self.app.get("/album/{album_id}",
                      response_class=HTMLResponse)(self.get_album)
 
@@ -41,6 +44,10 @@ class WebUI:
             raise HTTPException(status_code=400,
                                 detail="Unsupported file type")
         return FileResponse(filename, media_type=media_type)
+
+    def get_cover(self, filename: str):
+        cover = TrackFile(filename, self.config).extract_cover_image().data
+        return StreamingResponse(BytesIO(cover), media_type="image/jpeg")
 
     def get_album(self, request: Request, album_id: int):
         album = self.db.db_select_tracks_from_albums(album_id)

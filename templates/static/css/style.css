@@ -209,7 +209,7 @@ footer {
     flex-direction: column;
 }
 
-.player-bar .album-art-in-player {
+.player-bar #album-art-in-player {
     width: 80px;
     height: 80px;
 }

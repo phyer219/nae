@@ -17,22 +17,26 @@ def process_number_total(num_tot: str, cut='/'):
 
 
 class TrackFile:
-    def __init__(self, path, config: NaeConfig):
+    def __init__(self, path, config: NaeConfig, extract_tags=True):
         self.logger = Logger('Track', config.LOG_PATH)
         self.path = path
         self.mfile = mutagen.File(path)
+        self.ext = os.path.splitext(self.path)[1].lower()
         self.tags = self.mfile.tags
-        _, ext = os.path.splitext(self.path)
-        if ext == ".mp3":
+
+        if self.ext == ".mp3":
             self.format = 'mp3'
             self._process_tag = self._process_ID3v2
-            self._extract_tags_mp3()
-        elif ext == ".flac":
+            self.extract_tags = self._extract_tags_mp3
+        elif self.ext == ".flac":
             self.format = 'flac'
             self._process_tag = self._process_FLAC
-            self._extract_tags_flac()
+            self.extract_tags = self._extract_tags_flac
         else:
             raise TypeError('unsupported format!')
+
+        if extract_tags:
+            self.extract_tags()
 
     def _extract_tags_mp3(self):
         self.title = self._extract_tag('TIT2', not_null=True)
@@ -78,3 +82,10 @@ class TrackFile:
             self.logger.warning(f'{self.path:s}, {tag_frame:s} NOT FOUND! '
                                 + 'return NULL')
         return 'NULL'
+
+    def extract_cover_image(self):
+        if self.ext == '.flac':
+            return self.mfile.pictures[0]
+
+        elif self.ext == '.mp3':
+            return self.tags.getall('APIC')[0]

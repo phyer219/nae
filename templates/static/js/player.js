@@ -6,6 +6,7 @@ function playAudio(filename, title) {
         currentSound.stop();
     }
     document.getElementById('track-info').textContent = "loading...";
+    document.getElementById('album-art-in-player').src = `/cover/${filename}`;
     currentSound = new Howl({
         src: [`/audio/${filename}`],
         autoplay: false,
