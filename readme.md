@@ -6,6 +6,15 @@ Organize and backup the musics in different device.
 
 Max 30 min per day.
 
+## WebUI
+
+Now, there is a simple WebUI for nae.
+
+- The nae color theme
+  ![web_nae](./images/web_nae.png)
+- The dark color theme
+  ![web_dark](./images/web_dark.png)
+
 ## Basic usage
 
 Because this package us under development, the following script is only for debug testing.
