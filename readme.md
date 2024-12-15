@@ -118,3 +118,4 @@ color `#86C166`
 - [`FastAPI`](https://fastapi.tiangolo.com/)
 - [`HOWLER.JS`](https://howlerjs.com/)
 - [`SQLAlchemy`](https://www.sqlalchemy.org/)
+- [`Font Awesome`](https://fontawesome.com/)
