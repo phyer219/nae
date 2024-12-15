@@ -11,29 +11,30 @@ Max 30 min per day.
 Because this package us under development, the following script is only for debug testing.
 
 ```python
-import os
 from time import perf_counter
 from nae.database_handle import NaeDatabase
-from nae.tag_handle import Track
-from nae.webui import app
-from nae.file_handle import import_media
-from nae.default_config import DATABASE_DIR, DATABASE_NAME
+from nae.webui import WebUI
+from nae.file_handle import FileHandle
+from nae.default_config import NaeConfig
 import uvicorn
 
-# For debug, delete the database when import new media.
-# if os.path.exists(os.path.join(DATABASE_DIR, DATABASE_NAME)):
-#     print("database exists, and will be deleted")
-#     os.remove(os.path.join(DATABASE_DIR, DATABASE_NAME))
+media_path = './test_media'
 
+time0 = perf_counter()
 
-media_path = '.'
-import_media(media_path)
+db = NaeDatabase(config=config)
+fh = FileHandle(media_path_to_import=media_path,
+                keep_original_file=True, link=False,
+                handle_files=True,
+                database=db,
+                config=config)
 
-# run the webUI
-# uvicorn.run(app,
-#             host="127.0.0.1", port=8000, reload=False)
-# items = nae_db.getall()
+fh.import_media(test=False)
 
+print(f"time cost: {perf_counter() - time0}")
+
+webui = WebUI(config=config)
+uvicorn.run(webui.app, host="127.0.0.1", port=8000, reload=False)
 ```
 
 ## Motivation
