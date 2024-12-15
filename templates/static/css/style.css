@@ -48,16 +48,16 @@ header {
     justify-content: space-between;
 }
 
-
+/*
 header button {
     background: none;
     border: none;
     cursor: pointer;
     font-size: 1.5rem;
     color: var(--secondary-color);
-}
+} */
 
-.player-bar .center button {
+header button, .player-bar .center button {
     background: none;
     border: none;
     cursor: pointer;
