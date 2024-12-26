@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nae"
+version = "0.1.0"
+description = "A simple music organizer."
+readme = "README.md"
+requires-python = ">=3.7"
+dependencies = [
+    "mutagen>=1.47.0",
+]
+
+[project.optional-dependencies]
+dev = []
+
+[project.scripts]
+nae = "nae.ui:main"

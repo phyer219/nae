@@ -111,6 +111,8 @@ color `#86C166`
   - [ ] use `dataclass` and `pydantic`
 - [ ] write the documentation
 - [ ] publish to pypi
+- [x] add the command UI
+- [ ] complete the command UI
 
 ## Acknowledge
 
