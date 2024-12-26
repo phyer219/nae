@@ -17,3 +17,7 @@ dev = []
 
 [project.scripts]
 nae = "nae.ui:main"
+
+[tool.setuptools.packages.find]
+include = ["nae"]
+exclude = ["images"]
