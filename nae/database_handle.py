@@ -62,7 +62,7 @@ class NaeDatabase:
 
         self.logger = Logger(log_name='NaeDatabase', log_file=config.LOG_PATH)
 
-        self.engine = create_engine(f"sqlite:///{self.db_path}", echo=True)
+        self.engine = create_engine(f"sqlite:///{self.db_path}", echo=False)
         self.Session = sessionmaker(bind=self.engine)
         self._init_db()
 
