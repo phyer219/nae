@@ -6,10 +6,10 @@ from .default_config import NaeConfig
 import uvicorn
 
 
-def import_media(media_path, test, config: NaeConfig):
+def import_media(media_path, test, keep_original_file: bool, config: NaeConfig):
     db = NaeDatabase(config=config)
     fh = FileHandle(media_path_to_import=media_path,
-                    keep_original_file=True, link=False,
+                    keep_original_file=keep_original_file, link=False,
                     handle_files=True,
                     database=db,
                     config=config)
@@ -49,6 +49,10 @@ class Args2Config:
             '--path', nargs='?',
             help='The path of the media file.',
             default='.')
+        import_parser.add_argument(
+            '--keep_original_file', nargs='?',
+            help='Keep the original file after import.',
+            default=True)
         self.add_config_arguments(import_parser)
 
     def regsist_serve_parser(self):
@@ -74,8 +78,13 @@ def main():
     config = a2c.get_config()
     args = a2c.parser.parse_args()
     if args.command == 'check':
-        import_media(args.path, test=True, config=config)
+        import_media(args.path, test=True,
+                     keep_original_file=eval(args.keep_original_file),
+                     config=config)
     if args.command == 'import':
-        import_media(args.path, test=False, config=config)
+        print('==========', args.keep_original_file)
+        import_media(args.path, test=False,
+                     keep_original_file=eval(args.keep_original_file),
+                     config=config)
     elif args.command == 'serve':
         serve(config=config)
