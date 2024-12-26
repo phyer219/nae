@@ -19,32 +19,9 @@ Now, there is a simple WebUI for nae.
 
 Because this package us under development, the following script is only for debug testing.
 
-```python
-from time import perf_counter
-from nae.database_handle import NaeDatabase
-from nae.webui import WebUI
-from nae.file_handle import FileHandle
-from nae.default_config import NaeConfig
-import uvicorn
-
-media_path = './test_media'
-
-time0 = perf_counter()
-
-db = NaeDatabase(config=config)
-fh = FileHandle(media_path_to_import=media_path,
-                keep_original_file=True, link=False,
-                handle_files=True,
-                database=db,
-                config=config)
-
-fh.import_media(test=False)
-
-print(f"time cost: {perf_counter() - time0}")
-
-webui = WebUI(config=config)
-uvicorn.run(webui.app, host="127.0.0.1", port=8000, reload=False)
-```
+- check the media in `test_media` : `nae check --path test_media`
+- import the media in `test_media`: `nae import --path test_media --keep_original_file True`
+- run a server: `nae serve`
 
 ## Motivation
 

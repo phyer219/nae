@@ -6,10 +6,11 @@ from .default_config import NaeConfig
 import uvicorn
 
 
-def import_media(media_path, test, keep_original_file: bool, config: NaeConfig):
+def import_media(media_path, test, config: NaeConfig):
     db = NaeDatabase(config=config)
     fh = FileHandle(media_path_to_import=media_path,
-                    keep_original_file=keep_original_file, link=False,
+                    keep_original_file=config.KEEP_ORIGINAL_FILE,
+                    link=False,
                     handle_files=True,
                     database=db,
                     config=config)
@@ -49,10 +50,6 @@ class Args2Config:
             '--path', nargs='?',
             help='The path of the media file.',
             default='.')
-        import_parser.add_argument(
-            '--keep_original_file', nargs='?',
-            help='Keep the original file after import.',
-            default=True)
         self.add_config_arguments(import_parser)
 
     def regsist_serve_parser(self):
@@ -61,16 +58,29 @@ class Args2Config:
         self.add_config_arguments(serve_parser)
 
     def add_config_arguments(self, parser):
+        default_config = NaeConfig()
         parser.add_argument(
-            '--base_dir', nargs='?',
+            '--base_dir', nargs='?', default=default_config.BASE_DIR,
             help='The base directory of the nae music library')
         parser.add_argument(
-            '--port', nargs='?',
+            '--port', nargs='?', default=default_config.PORT,
             help='The port number.')
+        parser.add_argument(
+            '--keep_original_file', nargs='?',
+            default=default_config.KEEP_ORIGINAL_FILE,
+            help='Keep the original file.')
 
-    def get_config(self):
-        return NaeConfig(BASE_DIR=self.parser.parse_args().base_dir,
-                         PORT=self.parser.parse_args().port)
+    def get_config(self) -> NaeConfig:
+        args = self.parser.parse_args()
+        print(args.port)
+        if type(args.keep_original_file) is str:
+            args.keep_original_file = eval(args.keep_original_file)
+        if type(args.port) is str:
+            args.port = eval(args.port)
+        return NaeConfig(
+            BASE_DIR=args.base_dir,
+            PORT=args.port,
+            KEEP_ORIGINAL_FILE=args.keep_original_file)
 
 
 def main():
@@ -79,12 +89,9 @@ def main():
     args = a2c.parser.parse_args()
     if args.command == 'check':
         import_media(args.path, test=True,
-                     keep_original_file=eval(args.keep_original_file),
                      config=config)
     if args.command == 'import':
-        print('==========', args.keep_original_file)
         import_media(args.path, test=False,
-                     keep_original_file=eval(args.keep_original_file),
                      config=config)
     elif args.command == 'serve':
         serve(config=config)
